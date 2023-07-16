@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,7 +17,7 @@ module.exports = {
         // if null, dedault to page 1
         const page = (interaction.options.getNumber("page") || 1) - 1
 
-        if (page > totalPages)
+        if (page +1 > totalPages)
             return await interaction.editReply(`Invalid Page. There are only a total of ${totalPages} pages of songs`)
         // i is the index of the song in array
         const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
@@ -28,7 +28,7 @@ module.exports = {
 
         await interaction.editReply({
             embeds: [
-                new MessageEmbed()
+                new EmbedBuilder()
                     .setDescription(`**Currently Playing**\n` +
                     (currentSong ? `\` [${currentSong.duration}]\` ${currentSong.title} -- <@${currentSong.requestedBy.id}>` : "None") +
                     `\n\n**Queue**\n${queueString}`

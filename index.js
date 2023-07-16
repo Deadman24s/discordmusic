@@ -1,12 +1,14 @@
 const Discord = require("discord.js")
 const dotenv = require("dotenv")
 // set up discord slash commands
-const { REST } = require("discordjs/rest")
+const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9")
 // read files
 const fs = require("fs")
 // manage queue and other features
 const { Player } = require("discord-player")
+//const { Client, GatewayIntentBits,} = require('discord.js')
+const { Client, GatewayIntentBits } = require("discord.js")
 
 
 dotenv.config()
@@ -16,13 +18,13 @@ const TOKEN = process.env.TOKEN
 const LOAD_SLASH = process.argv[2] == "load"
 
 // client and guild id to deploy slash commands - from discord bot id
-const CLIENT_ID = "CLIENT"
-const GUILD_ID = "GUILD"
+const CLIENT_ID = "Bot ID"
+const GUILD_ID = "Server ID"
 
 const client = new Discord.Client({
     intents: [
-    "GUILDS",
-    "GUILD_VOICE_STATES" 
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildVoiceStates
     ]
 })
 
@@ -70,14 +72,14 @@ else {
         console.log(`Logged in as ${client.user.tag}`)
     })
     client.on("interactionCreate", (interaction) => {
-        async function handleCommand(){
-           if (!interaction.isCommand()) return
+        async function handleCommand() {
+            if (!interaction.isCommand()) return
 
-           const slashcmd = client.slashcommands.get(interaction.commandName)
-           if (!slashcmd) interaction.reply("Not a valid slash command")
+            const slashcmd = client.slashcommands.get(interaction.commandName)
+            if (!slashcmd) interaction.reply("Not a valid slash command")
 
-           await interaction.deferReply()
-           await slashcmd.run({ client, interaction })
+            await interaction.deferReply()
+            await slashcmd.run({ client, interaction })
         }
         handleCommand()
     })
